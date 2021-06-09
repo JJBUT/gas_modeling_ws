@@ -1,4 +1,5 @@
 #include <nrg_gas_source_localization/nrg_gas_source_localization.h>
+#include <nrg_gas_utilities/nrg_gas_utilities.h>
 
 #include <message_filters/subscriber.h>
 #include <message_filters/synchronizer.h>
@@ -10,25 +11,25 @@ namespace nrg_gas
 {
 
 
-
+using nrg_gas_utilities::AnemometerMsg;
 using nrg_gas_utilities::GasConcentration;
-using geometry_msgs::Vector3Stamped;
 
-typedef message_filters::sync_policies::ApproximateTime<GasConcentration, Vector3Stamped> MySyncPolicy;
+typedef message_filters::sync_policies::ApproximateTime<GasConcentration, AnemometerMsg> MySyncPolicy;
 typedef message_filters::Synchronizer<MySyncPolicy> Sync;
 
 std::unique_ptr<NRGGasSourceLocalization> source_localization_node;
 
 //Forward declaration
 void measurementCallback( const nrg_gas_utilities::GasConcentrationConstPtr& gas, 
-                          const geometry_msgs::Vector3StampedConstPtr& wind )
+                          const nrg_gas_utilities::AnemometerMsgConstPtr& wind )
 {
     GasConcentration non_constptr_gas;
     non_constptr_gas.concentration = gas->concentration;
     non_constptr_gas.header = gas->header;
 
-    Vector3Stamped non_constptr_wind;
-    non_constptr_wind.vector = wind->vector;
+    AnemometerMsg non_constptr_wind;
+    non_constptr_wind.speed = wind->speed;
+    non_constptr_wind.azimuth = wind->azimuth;
     non_constptr_wind.header = wind->header;
 
     source_localization_node->update( non_constptr_gas, non_constptr_wind);
@@ -44,7 +45,7 @@ int main(int argc, char** argv)
     ros::init(argc, argv, "nrg_gas_source_localization_node");
     ros::NodeHandle nh;
     message_filters::Subscriber<nrg_gas_utilities::GasConcentration> sub_gas; 
-    message_filters::Subscriber<geometry_msgs::Vector3Stamped> sub_wind;
+    message_filters::Subscriber<nrg_gas_utilities::AnemometerMsg> sub_wind;
     sub_wind.subscribe( nh, "/anemometer_data", 20 );
     sub_gas.subscribe( nh, "/gas_sensor_data",  20 );
 

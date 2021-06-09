@@ -30,7 +30,7 @@ NRGGasSourceLocalization::NRGGasSourceLocalization()
 }
 
 void NRGGasSourceLocalization::update( const GasConcentration& gas_measurement, 
-                                       const Vector3Stamped& wind_measurement )
+                                       const AnemometerMsg& wind_measurement )
 {
     visualization_pub_.publish(createParticleSetVisualization());
 
@@ -59,7 +59,7 @@ void NRGGasSourceLocalization::initialize( const int& np )
 }
 
 void NRGGasSourceLocalization::reweight( const GasConcentration& gas_measurement, 
-                                         const Vector3Stamped& wind_measurement )
+                                         const AnemometerMsg& wind_measurement )
 {   
     TransformStamped map_to_anemometer_tf;
     try{

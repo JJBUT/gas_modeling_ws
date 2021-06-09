@@ -1,8 +1,9 @@
 <?xml version="1.0"?>
 <launch> 
-    <node pkg="tf2_ros" type="static_transform_publisher" name="map_to_baselink_broadcaster" args="-21.0 -17.264187332977475 0 0 0 0.0 1 map base_link" />
-    <node pkg="tf2_ros" type="static_transform_publisher" name="baselink_to_anemometer_broadcaster" args="1.0 1 0 0 0 0 1 base_link anemometer_link" />
-    <node pkg="tf2_ros" type="static_transform_publisher" name="baselink_to_gas_sensor_broadcaster" args="0.0 0 0 0 0 0 1 base_link gas_sensor_link" />
+     <!--Activate lines below if robot not publishing these-->
+    <!--node pkg="tf2_ros" type="static_transform_publisher" name="map_to_baselink_broadcaster" args="-21.0 -17.264187332977475 0 0 0 0.0 1 map base_link" /-->
+    <!--node pkg="tf2_ros" type="static_transform_publisher" name="baselink_to_anemometer_broadcaster" args="1.0 1 0 0 0 0 1 base_link anemometer_link" /-->
+    <!--node pkg="tf2_ros" type="static_transform_publisher" name="baselink_to_gas_sensor_broadcaster" args="0.0 0 0 0 0 0 1 base_link gas_sensor_link" /-->
     
     <arg name = "horizontal_dispersion_x" 
          default = "0.22"/>

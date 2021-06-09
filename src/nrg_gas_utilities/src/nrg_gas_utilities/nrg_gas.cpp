@@ -19,7 +19,7 @@ NRGGas::NRGGas()
     private_nh_.param( "vertical_dispersion_z", wp_.vertical.z, 0.1 );
 }
 
-double NRGGas::calculateConcentration( const GasSource &gs, const Vector3Stamped &wind, TransformStamped map_to_anemometer ) const
+double NRGGas::calculateConcentration( const GasSource &gs, const AnemometerMsg &wind, TransformStamped map_to_anemometer ) const
 {  
     Point source_local_point;
     source_local_point = calculateSourceTransform(gs.position, wind, map_to_anemometer);
@@ -34,12 +34,12 @@ double NRGGas::calculateConcentration( const GasSource &gs, const Vector3Stamped
         const double sz = wp_.vertical.x*source_local_point.x*std::pow( 1.0+wp_.vertical.y*source_local_point.x, -wp_.vertical.z );
         const double expy = std::exp(-( source_local_point.y*source_local_point.y )/( 2*sy*sy ));  
         const double expz = std::exp(-( source_local_point.z*source_local_point.z )/( 2*sz*sz ));
-        const double norm = ( gs.rate/std::sqrt(wind.vector.x*wind.vector.x + wind.vector.y*wind.vector.y) )/( 2*M_PI*sy*sz );
+        const double norm = ( gs.rate/wind.speed )/( 2*M_PI*sy*sz );
         return norm*expy*expz;
     }
 }
 
-Point NRGGas::calculateSourceTransform(const PointStamped& source, const Vector3Stamped& wind, const TransformStamped& map_to_anemometer) const
+Point NRGGas::calculateSourceTransform(const PointStamped& source, const AnemometerMsg& wind, const TransformStamped& map_to_anemometer) const
 {
     Point t_in;
     // Source local translation
@@ -48,10 +48,10 @@ Point NRGGas::calculateSourceTransform(const PointStamped& source, const Vector3
     t_in.z = map_to_anemometer.transform.translation.z - source.point.z;
 
     tf2::Quaternion q_wind_azimuth, q_base;
-    // TODO- why do we need 2*M_PI?
+    
     q_wind_azimuth.setRPY( 0, 
-                           0, 
-                           2*M_PI-atan2(wind.vector.y, wind.vector.x));       // Wind azimuth in anemometer frame
+                           0,
+                           M_PI - wind.azimuth);       // Wind azimuth in anemometer frame:
     tf2::convert( map_to_anemometer.transform.rotation,
                   q_base );                                             // Anemometer rotation in map frame
     TransformStamped rot;

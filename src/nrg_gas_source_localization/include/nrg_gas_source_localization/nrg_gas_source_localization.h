@@ -18,10 +18,10 @@ class NRGGasSourceLocalization: protected NRGGas
 {
 public:
     NRGGasSourceLocalization();
-    void update( const GasConcentration& gas_measurement, const Vector3Stamped& wind_measurement );
+    void update( const GasConcentration& gas_measurement, const AnemometerMsg& wind_measurement );
 private:
     void initialize(const int& np);
-    void reweight( const GasConcentration& gas_measurement, const Vector3Stamped& wind_measurement );
+    void reweight( const GasConcentration& gas_measurement, const AnemometerMsg& wind_measurement );
     void resample();
     bool isDegenerate();
 

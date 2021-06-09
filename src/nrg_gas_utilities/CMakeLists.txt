@@ -56,6 +56,7 @@ add_message_files(
   GasConcentration.msg
   GasSource.msg
   WindParameters.msg
+  AnemometerMsg.msg
 )
 
 ## Generate services in the 'srv' folder
